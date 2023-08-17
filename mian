@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Resume(),
+      theme: ThemeData(
+      ),
+    );
+  }
+}
+
+class Resume extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('My Resume'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'ชื่อ-นามสกุล',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    Text('ตำแหน่งงาน'),
+                  ],
+                ),
+                CircleAvatar(
+                  backgroundImage: AssetImage('path_to_your_image.jpg'),
+                  radius: 40,
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Divider(
+              thickness: 2, 
+              color: Colors.grey, 
+            ),
+            Text(
+              'ข้อมูลการศึกษา',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text('ระดับประถมศึกษา / สถาบันการศึกษาโรงเรียนเทศบาล 1 ศรีเกิด'),
+            Text('ระดับมัธยมศึกษา / สถาบันการศึกษาโรงเรียนเทศบาล 5 เด่นห้า'),
+            Text('ระดับปวช / สถาบันการศึกษาวิทยาลัยเทคนิคเชียงราย'),
+            Text('ระดับปวส / สถาบันการศึกษาวิทยาลัยเทคนิคเชียงราย'),
+            Text('ระดับปริญญาตรี / สถาบันการศึกษามหาวิทยาลัยเทคโนโลยีราชมงคลล้านนาเชียงใหม่'),
+            SizedBox(height: 20),
+            Divider(
+              thickness: 2,
+              color: Colors.grey,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'งานอดิเรก',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text('รายละเอียดงานอดิเรก'),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'ติดต่อ',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text('อีเมล: example@example.com\nเบอร์โทร: 123-456-7890'),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
