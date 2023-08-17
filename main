@@ -20,7 +20,7 @@ class Resume extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Resume'),
+        title: Text('Thawatchai Resume'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -34,15 +34,17 @@ class Resume extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'ชื่อ-นามสกุล',
+                      'ชื่อ : ธวัชชัย สุรินแก้ว',
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    Text('ตำแหน่งงาน'),
+                    Text('ชื่อเล่น : ตูน'),
+                    Text('วัน/เดือน/ปีเกิด : 01/07/2000'),
+                    Text('อายุ : 23 ปี'),
                   ],
                 ),
                 CircleAvatar(
-                  backgroundImage: AssetImage('path_to_your_image.jpg'),
-                  radius: 40,
+                  backgroundImage: NetworkImage('https://raw.githubusercontent.com/Thawatchai0107/Thawatchai-Resume/main/142840088_165811128369611_8619941059143450131_n.jpg'),
+                  radius: 100,
                 ),
               ],
             ),
@@ -75,7 +77,7 @@ class Resume extends StatelessWidget {
                       'งานอดิเรก',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    Text('รายละเอียดงานอดิเรก'),
+                    Text('ดูหนัง\nฟังเพลง\nเล่นเกม'),
                   ],
                 ),
                 Column(
@@ -85,7 +87,8 @@ class Resume extends StatelessWidget {
                       'ติดต่อ',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    Text('อีเมล: example@example.com\nเบอร์โทร: 123-456-7890'),
+                    Text('อีเมล: Thawatchai_su64@live.rmutl.ac.th'),
+                    Text('เบอร์โทร: 095-134-5439'),
                   ],
                 ),
               ],
