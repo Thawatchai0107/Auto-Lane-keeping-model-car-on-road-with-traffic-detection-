@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Resume(),
       theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
       ),
     );
   }
@@ -35,7 +36,8 @@ class Resume extends StatelessWidget {
                   children: [
                     Text(
                       'ชื่อ : ธวัชชัย สุรินแก้ว',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     Text('ชื่อเล่น : ตูน'),
                     Text('วัน/เดือน/ปีเกิด : 01/07/2000'),
@@ -43,15 +45,16 @@ class Resume extends StatelessWidget {
                   ],
                 ),
                 CircleAvatar(
-                  backgroundImage: NetworkImage('https://raw.githubusercontent.com/Thawatchai0107/Thawatchai-Resume/main/142840088_165811128369611_8619941059143450131_n.jpg'),
-                  radius: 100,
+                  backgroundImage: NetworkImage(
+                      'https://raw.githubusercontent.com/Thawatchai0107/Thawatchai-Resume/main/142840088_165811128369611_8619941059143450131_n.jpg'),
+                  radius: 80,
                 ),
               ],
             ),
             SizedBox(height: 20),
             Divider(
-              thickness: 2, 
-              color: Colors.grey, 
+              thickness: 2,
+              color: Colors.red,
             ),
             Text(
               'ข้อมูลการศึกษา',
@@ -61,11 +64,12 @@ class Resume extends StatelessWidget {
             Text('ระดับมัธยมศึกษา / สถาบันการศึกษาโรงเรียนเทศบาล 5 เด่นห้า'),
             Text('ระดับปวช / สถาบันการศึกษาวิทยาลัยเทคนิคเชียงราย'),
             Text('ระดับปวส / สถาบันการศึกษาวิทยาลัยเทคนิคเชียงราย'),
-            Text('ระดับปริญญาตรี / สถาบันการศึกษามหาวิทยาลัยเทคโนโลยีราชมงคลล้านนาเชียงใหม่'),
+            Text(
+                'ระดับปริญญาตรี / สถาบันการศึกษามหาวิทยาลัยเทคโนโลยีราชมงคลล้านนาเชียงใหม่'),
             SizedBox(height: 20),
             Divider(
               thickness: 2,
-              color: Colors.grey,
+              color: Colors.red,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,7 +79,8 @@ class Resume extends StatelessWidget {
                   children: [
                     Text(
                       'งานอดิเรก',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text('ดูหนัง\nฟังเพลง\nเล่นเกม'),
                   ],
@@ -85,7 +90,8 @@ class Resume extends StatelessWidget {
                   children: [
                     Text(
                       'ติดต่อ',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text('อีเมล: Thawatchai_su64@live.rmutl.ac.th'),
                     Text('เบอร์โทร: 095-134-5439'),
