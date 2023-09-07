@@ -23,83 +23,126 @@ class Resume extends StatelessWidget {
       appBar: AppBar(
         title: Text('Thawatchai Resume'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'ชื่อ : ธวัชชัย สุรินแก้ว',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    Text('ชื่อเล่น : ตูน'),
-                    Text('วัน/เดือน/ปีเกิด : 01/07/2000'),
-                    Text('อายุ : 23 ปี'),
-                  ],
-                ),
-                CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://raw.githubusercontent.com/Thawatchai0107/Thawatchai-Resume/main/142840088_165811128369611_8619941059143450131_n.jpg'),
-                  radius: 80,
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Divider(
-              thickness: 2,
-              color: Colors.red,
-            ),
-            Text(
-              'ข้อมูลการศึกษา',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Text('ระดับประถมศึกษา / สถาบันการศึกษาโรงเรียนเทศบาล 1 ศรีเกิด'),
-            Text('ระดับมัธยมศึกษา / สถาบันการศึกษาโรงเรียนเทศบาล 5 เด่นห้า'),
-            Text('ระดับปวช / สถาบันการศึกษาวิทยาลัยเทคนิคเชียงราย'),
-            Text('ระดับปวส / สถาบันการศึกษาวิทยาลัยเทคนิคเชียงราย'),
-            Text(
-                'ระดับปริญญาตรี / สถาบันการศึกษามหาวิทยาลัยเทคโนโลยีราชมงคลล้านนาเชียงใหม่'),
-            SizedBox(height: 20),
-            Divider(
-              thickness: 2,
-              color: Colors.red,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'งานอดิเรก',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text('ดูหนัง\nฟังเพลง\nเล่นเกม'),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'ติดต่อ',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text('อีเมล: Thawatchai_su64@live.rmutl.ac.th'),
-                    Text('เบอร์โทร: 095-134-5439'),
-                  ],
-                ),
-              ],
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+                'https://raw.githubusercontent.com/Thawatchai0107/Thawatchai-Resume/main/BG3.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(25.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'ชื่อ : ธวัชชัย สุรินแก้ว',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      Text('ชื่อเล่น : ตูน'),
+                      Text('วัน/เดือน/ปีเกิด : 01/07/2000'),
+                      Text('อายุ : 23 ปี'),
+                    ],
+                  ),
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://raw.githubusercontent.com/Thawatchai0107/Thawatchai-Resume/main/142840088_165811128369611_8619941059143450131_n.jpg'),
+                    radius: 70,
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Divider(
+                thickness: 2,
+                color: Colors.red,
+              ),
+              Text(
+                'ข้อมูลการศึกษา',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Icon(
+                Icons.school,
+                color: Colors.red,
+                size: 24.0,
+              ),
+              Text('ระดับประถมศึกษา / สถาบันการศึกษาโรงเรียนเทศบาล 1 ศรีเกิด'),
+              Text('ระดับมัธยมศึกษา / สถาบันการศึกษาโรงเรียนเทศบาล 5 เด่นห้า'),
+              Text('ระดับปวช / สถาบันการศึกษาวิทยาลัยเทคนิคเชียงราย'),
+              Text('ระดับปวส / สถาบันการศึกษาวิทยาลัยเทคนิคเชียงราย'),
+              Text(
+                  'ระดับปริญญาตรี / สถาบันการศึกษามหาวิทยาลัยเทคโนโลยีราชมงคลล้านนาเชียงใหม่'),
+              SizedBox(height: 20),
+              Divider(
+                thickness: 2,
+                color: Colors.red,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'งานอดิเรก',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Icon(
+                        Icons.movie_filter,
+                        color: Colors.red,
+                        size: 24.0,
+                      ),
+                      Text('ดูหนัง\nฟังเพลง\nเล่นเกม'),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'ติดต่อ',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Icon(
+                        Icons.settings_phone,
+                        color: Colors.red,
+                        size: 24.0,
+                      ),
+                      Text('Email : Thawatchai_su64@live.rmutl.ac.th'),
+                      Text('Tell : 095-134-5439'),
+                      Text('Line : 095-134-5439'),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Divider(
+                thickness: 2,
+                color: Colors.red,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'ความสามารถที่คาดหวังว่าจะทำได้ก่อนจบการศึกษา',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text('มีความสามารถการใช้งานโปรแกรมคอมพิวเตอร์ต่าง ๆ'),
+                  Text('มีความสามารถและความเชี่ยวชาญในการใช้ภาษา Dart Flutter'),
+                  Text('มีความสามารถและความเชี่ยวชาญในการใช้ภาษา C# , C++'),
+                  Text('มีความสามารถและความเชี่ยวชาญในการใช้ภาษา Javascript'),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
