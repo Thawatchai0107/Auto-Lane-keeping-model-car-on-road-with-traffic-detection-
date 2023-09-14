@@ -23,114 +23,214 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   dynamic textFieldValue = '';
   dynamic radioButtonValue = '';
-  dynamic resultText1 = ''; 
-  dynamic resultText2 = ''; 
+  dynamic resultText1 = '';
+  dynamic resultText2 = '';
+  double  resultText3 = 500.0;
+  double  slider = 0.0;
+  dynamic tvChecked;
+  dynamic airChecked;
+  dynamic wifiChecked;
+  dynamic breakfastChecked;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Thawatchai Input Widget'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('TextField'),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  textFieldValue = value;
-                });
-              },
-              decoration: InputDecoration(labelText: 'Text'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  
-                  resultText1 = textFieldValue;
-                });
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+
+  void updateResult() {
+    double  total = 500;
+    if (tvChecked) total += 100.0;
+    if (airChecked) total += 300.0;
+    if (wifiChecked) total += 300.0;
+    if (breakfastChecked) total += 100.0;
+
+    setState(() {
+      resultText3 = total;
+    });
+  }
+  
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Thawatchai Input Widget'),
+        ),
+        body: SingleChildScrollView( 
+        child : Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('TextField'),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    textFieldValue = value;
+                  });
+                },
+                decoration: InputDecoration(labelText: 'Text'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    resultText1 = textFieldValue;
+                  });
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Submit'),
+                    SizedBox(width: 5),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Text('Result : $resultText1'),
+              SizedBox(height: 20),
+              Divider(
+                thickness: 2,
+                color: Colors.red,
+              ),
+              Text('RadioListTile'),
+              Column(
                 children: [
-                  Text('Submit'),
-                  SizedBox(width: 5),
-                 
+                  RadioListTile<String>(
+                    title: Text('Apple'),
+                    value: 'Apple',
+                    groupValue: radioButtonValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonValue = value;
+                        resultText2 = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: Text('Banana'),
+                    value: 'Banana',
+                    groupValue: radioButtonValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonValue = value;
+                        resultText2 = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: Text('Orange'),
+                    value: 'Orange',
+                    groupValue: radioButtonValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonValue = value;
+                        resultText2 = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: Text('Watermelon'),
+                    value: 'Watermelon',
+                    groupValue: radioButtonValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonValue = value;
+                        resultText2 = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: Text('NaN'),
+                    value: 'NaN',
+                    groupValue: radioButtonValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonValue = value;
+                        resultText2 = value;
+                      });
+                    },
+                  ),
                 ],
               ),
-            ),
-            SizedBox(height: 20),
-            Text('Result : $resultText1'),
-            
-            SizedBox(height: 20),
-            Text('RadioListTile'),
+              SizedBox(height: 20),
+              Text('Result : $resultText2'),
+              SizedBox(height: 20),
+              Divider(
+                thickness: 2,
+                color: Colors.red,
+              ),
+              Text('Slider'),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Transform.scale(
+                    scale: slider + 1.0,
+                    child: Icon(Icons.star, size: 50.0, color: Colors.red),
+                  ),
+                  Expanded(
+                    child: Slider(
+                      value: slider,
+                      onChanged: (newValue) {
+                        setState(() {
+                          slider = newValue;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 40),
+              Divider(
+                thickness: 2,
+                color: Colors.red, 
+              ),
+              Text('CheckBox'),
+              Text('ห้องพักราคา 500 บาท สามารถรับบริการเพิ่มได้ดังนี้'),
             Column(
               children: [
-                RadioListTile<String>(
-                  title: Text('Apple'),
-                  value: 'Apple',
-                  groupValue: radioButtonValue,
+                CheckboxListTile(
+                  title: Text('TV +100'),
+                  value: tvChecked,
                   onChanged: (value) {
                     setState(() {
-                      radioButtonValue = value;
-                      resultText2 = value;
+                      tvChecked = value;
+                      updateResult();
                     });
                   },
                 ),
-                RadioListTile<String>(
-                  title: Text('Banana'),
-                  value: 'Banana',
-                  groupValue: radioButtonValue,
+                CheckboxListTile(
+                  title: Text('Air +300'),
+                  value: airChecked,
                   onChanged: (value) {
                     setState(() {
-                      radioButtonValue = value;
-                      resultText2 = value;
+                      airChecked = value;
+                      updateResult();
                     });
                   },
                 ),
-                RadioListTile<String>(
-                  title: Text('Orange'),
-                  value: 'Orange',
-                  groupValue: radioButtonValue,
+                CheckboxListTile(
+                  title: Text('Wifi +300'),
+                  value: wifiChecked,
                   onChanged: (value) {
                     setState(() {
-                      radioButtonValue = value;
-                      resultText2 = value;
+                      wifiChecked = value;
+                      updateResult();
                     });
                   },
                 ),
-                RadioListTile<String>(
-                  title: Text('Watermelon'),
-                  value: 'Watermelon',
-                  groupValue: radioButtonValue,
+                CheckboxListTile(
+                  title: Text('Breakfast +100'),
+                  value: breakfastChecked,
                   onChanged: (value) {
                     setState(() {
-                      radioButtonValue = value;
-                      resultText2 = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('NaN'),
-                  value: 'NaN',
-                  groupValue: radioButtonValue,
-                  onChanged: (value) {
-                    setState(() {
-                      radioButtonValue = value;
-                      resultText2 = value;
+                      breakfastChecked = value;
+                      updateResult();
                     });
                   },
                 ),
               ],
             ),
             SizedBox(height: 20),
-            Text('Result : $resultText2'), 
-          ],
+            Text('Result : $resultText3'), 
+            ],
+          ),
         ),
-      ),
-    );
+       ),
+      );
+    }
   }
-}
