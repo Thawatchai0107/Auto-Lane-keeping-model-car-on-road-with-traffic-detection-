@@ -1,0 +1,338 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'คำนวณเกรดเฉลี่ย',
+      debugShowCheckedModeBanner: false,
+      home: const MyHomePage(title: 'คำนวณเกรดเฉลี่ย'),
+         theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  final String title;
+
+  const MyHomePage({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  List<Term> terms = [];
+  double overallGPA = 0.0;
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController creditController = TextEditingController();
+  String selectedGrade = 'A'; // เก็บข้อมูลเกรดที่เลือก
+  int editingIndex = -1;
+  int currentTermIndex = 0; // ดัชนีของเทอมปัจจุบัน
+
+  // ตัวเลือกของเกรด
+  List<String> gradeOptions = ['A', 'B', 'C', 'D', 'F'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Container( // Container ครอบส่วนบนและส่วนล่าง
+        color: Colors.grey[200], // เปลี่ยนสีพื้นหลัง
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Card( // ใช้ Card ครอบส่วนบน
+                elevation: 4.0, // เพิ่มเงาให้กับ Card
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: <Widget>[
+                      TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(labelText: 'ชื่อวิชา'),
+                      ),
+                      TextField(
+                        controller: creditController,
+                        decoration: InputDecoration(labelText: 'หน่วยกิจ'),
+                        keyboardType: TextInputType.number,
+                      ),
+                      // DropdownButton สำหรับเลือกเกรด
+                      Row(
+                        children: [
+                          Text('เลือกผลการเรียน'),
+                          SizedBox(width: 40),
+                          DropdownButton<String>(
+                            value: selectedGrade,
+                            items: gradeOptions.map((String grade) {
+                              return DropdownMenuItem<String>(
+                                value: grade,
+                                child: Text(grade),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedGrade = newValue!;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              if (editingIndex == -1) {
+                                addSubject();
+                              } else {
+                                updateSubject(editingIndex);
+                              }
+                            },
+                            child: Text(editingIndex == -1 ? 'เพิ่มวิชา' : 'แก้ไขวิชา'),
+                          ),
+                          SizedBox(width: 30),
+                          ElevatedButton(
+                            onPressed: () {
+                              addTerm();
+                            },
+                            child: Text('เพิ่มเทอม'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: terms.length,
+                itemBuilder: (context, termIndex) {
+                  Term term = terms[termIndex];
+                  return Card(
+                    elevation: 4.0, // เพิ่มเงาให้กับ Card
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text('เทอม ${termIndex + 1}'),
+                          subtitle: Text('GPA: ${term.gpa.toStringAsFixed(2)}'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  calculateTermGPA(termIndex);
+                                },
+                                child: Text('คำนวณ GPA'),
+                              ),
+                              SizedBox(width: 10),
+                              IconButton(
+                                icon: Icon(Icons.add),
+                                onPressed: () {
+                                  addSubjectToTerm(termIndex);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: term.subjects.length,
+                          itemBuilder: (context, subjectIndex) {
+                            Subject subject = term.subjects[subjectIndex];
+                            return ListTile(
+                              title: Text('ชื่อวิชา: ${subject.name}'),
+                              subtitle: Text(
+                                  'หน่วยกิจ: ${subject.credit}  เกรด: ${subject.grade}'),
+                              trailing: IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () {
+                                  editSubject(termIndex, subjectIndex);
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            Container( // Container ครอบส่วนคำนวณ GPA รวม
+              color: Colors.grey[200], // เปลี่ยนสีพื้นหลัง
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                children: [ Text(
+                    'GPA รวม: ${overallGPA.toStringAsFixed(2)}',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 30),
+                   ElevatedButton(
+                    onPressed: () {
+                      calculateOverallGPA();
+                    },
+                    child: Text('คำนวณ GPA รวม'),
+                  ),
+                  
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void addSubject() {
+    String name = nameController.text;
+    int credit = int.tryParse(creditController.text) ?? 0;
+
+    if (name.isNotEmpty && credit > 0) {
+      setState(() {
+        if (terms.isEmpty) {
+          terms.add(Term());
+        }
+        terms[currentTermIndex].subjects.add(Subject(name, credit, selectedGrade));
+        nameController.clear();
+        creditController.clear();
+        selectedGrade = 'A'; // รีเซ็ตเกรดกลับไปที่ A
+      });
+    }
+  }
+
+  void editSubject(int termIndex, int subjectIndex) {
+    setState(() {
+      editingIndex = subjectIndex;
+      nameController.text = terms[termIndex].subjects[subjectIndex].name;
+      creditController.text =
+          terms[termIndex].subjects[subjectIndex].credit.toString();
+      selectedGrade = terms[termIndex].subjects[subjectIndex].grade;
+    });
+  }
+
+  void updateSubject(int termIndex) {
+    String name = nameController.text;
+    int credit = int.tryParse(creditController.text) ?? 0;
+
+    if (name.isNotEmpty && credit > 0) {
+      setState(() {
+        terms[termIndex].subjects[editingIndex] = Subject(name, credit, selectedGrade);
+        editingIndex = -1;
+        nameController.clear();
+        creditController.clear();
+        selectedGrade = 'A'; // รีเซ็ตเกรดกลับไปที่ A
+      });
+    }
+  }
+
+  void addSubjectToTerm(int termIndex) {
+    String name = nameController.text;
+    int credit = int.tryParse(creditController.text) ?? 0;
+
+    if (name.isNotEmpty && credit > 0) {
+      setState(() {
+        if (terms.length <= termIndex) {
+          terms.add(Term());
+        }
+        terms[termIndex].subjects.add(Subject(name, credit, selectedGrade));
+        nameController.clear();
+        creditController.clear();
+        selectedGrade = 'A'; // รีเซ็ตเกรดกลับไปที่ A
+      });
+    }
+  }
+
+  void calculateOverallGPA() {
+    double totalOverallGradePoints = 0.0;
+    int totalOverallCredits = 0;
+
+    for (Term term in terms) {
+      double totalGradePoints = 0.0;
+      int totalCredits = 0;
+
+      for (Subject subject in term.subjects) {
+        totalGradePoints += (subject.gradePoints * subject.credit);
+        totalCredits += subject.credit;
+      }
+
+      if (totalCredits > 0) {
+        totalOverallGradePoints += totalGradePoints;
+        totalOverallCredits += totalCredits;
+      }
+    }
+
+    setState(() {
+      if (totalOverallCredits > 0) {
+        overallGPA = totalOverallGradePoints / totalOverallCredits;
+      } else {
+        overallGPA = 0.0;
+      }
+    });
+  }
+
+  void addTerm() {
+    setState(() {
+      terms.add(Term());
+      currentTermIndex = terms.length - 1;
+    });
+  }
+
+  void calculateTermGPA(int termIndex) {
+    Term term = terms[termIndex];
+    double totalGradePoints = 0.0;
+    int totalCredits = 0;
+
+    for (Subject subject in term.subjects) {
+      totalGradePoints += (subject.gradePoints * subject.credit);
+      totalCredits += subject.credit;
+    }
+
+    setState(() {
+      if (totalCredits > 0) {
+        term.gpa = totalGradePoints / totalCredits;
+      } else {
+        term.gpa = 0.0;
+      }
+    });
+  }
+}
+
+class Term {
+  List<Subject> subjects = [];
+  double gpa = 0.0;
+}
+
+class Subject {
+  final String name;
+  final int credit;
+  final String grade;
+
+  Subject(this.name, this.credit, this.grade);
+
+  double get gradePoints {
+    if (grade == 'A') {
+      return 4.0;
+    } else if (grade == 'B') {
+      return 3.0;
+    } else if (grade == 'C') {
+      return 2.0;
+    } else if (grade == 'D') {
+      return 1.0;
+    } else {
+      return 0.0;
+    }
+  }
+}
