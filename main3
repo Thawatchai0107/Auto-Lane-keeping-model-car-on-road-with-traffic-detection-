@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
       title: 'คำนวณเกรดเฉลี่ย',
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'คำนวณเกรดเฉลี่ย'),
-         theme: ThemeData(
+      theme: ThemeData(
         primarySwatch: Colors.red,
       ),
     );
@@ -34,11 +34,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController creditController = TextEditingController();
-  String selectedGrade = 'A'; // เก็บข้อมูลเกรดที่เลือก
+  String selectedGrade = 'A';
   int editingIndex = -1;
-  int currentTermIndex = 0; // ดัชนีของเทอมปัจจุบัน
+  int currentTermIndex = 0;
 
-  // ตัวเลือกของเกรด
   List<String> gradeOptions = ['A', 'B', 'C', 'D', 'F'];
 
   @override
@@ -47,14 +46,20 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Container( // Container ครอบส่วนบนและส่วนล่าง
-        color: Colors.grey[200], // เปลี่ยนสีพื้นหลัง
+      body: Container(
+       decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+                'https://raw.githubusercontent.com/Thawatchai0107/Thawatchai-Resume/main/BG3.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Card( // ใช้ Card ครอบส่วนบน
-                elevation: 4.0, // เพิ่มเงาให้กับ Card
+              child: Card(
+                elevation: 4.0,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -68,7 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         decoration: InputDecoration(labelText: 'หน่วยกิจ'),
                         keyboardType: TextInputType.number,
                       ),
-                      // DropdownButton สำหรับเลือกเกรด
                       Row(
                         children: [
                           Text('เลือกผลการเรียน'),
@@ -122,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (context, termIndex) {
                   Term term = terms[termIndex];
                   return Card(
-                    elevation: 4.0, // เพิ่มเงาให้กับ Card
+                    elevation: 4.0,
                     child: Column(
                       children: [
                         ListTile(
@@ -171,22 +175,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-            Container( // Container ครอบส่วนคำนวณ GPA รวม
-              color: Colors.grey[200], // เปลี่ยนสีพื้นหลัง
+            Container(
               padding: EdgeInsets.all(16.0),
               child: Column(
-                children: [ Text(
+                children: [
+                  Text(
                     'GPA รวม: ${overallGPA.toStringAsFixed(2)}',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 30),
-                   ElevatedButton(
+                  ElevatedButton(
                     onPressed: () {
                       calculateOverallGPA();
                     },
                     child: Text('คำนวณ GPA รวม'),
                   ),
-                  
                 ],
               ),
             ),
@@ -196,6 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  // ฟังก์ชันเพิ่มรายวิชา
   void addSubject() {
     String name = nameController.text;
     int credit = int.tryParse(creditController.text) ?? 0;
@@ -208,11 +212,12 @@ class _MyHomePageState extends State<MyHomePage> {
         terms[currentTermIndex].subjects.add(Subject(name, credit, selectedGrade));
         nameController.clear();
         creditController.clear();
-        selectedGrade = 'A'; // รีเซ็ตเกรดกลับไปที่ A
+        selectedGrade = 'A';
       });
     }
   }
 
+  // ฟังก์ชันแก้ไขรายวิชา
   void editSubject(int termIndex, int subjectIndex) {
     setState(() {
       editingIndex = subjectIndex;
@@ -223,6 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // ฟังก์ชันอัปเดตรายวิชา
   void updateSubject(int termIndex) {
     String name = nameController.text;
     int credit = int.tryParse(creditController.text) ?? 0;
@@ -233,11 +239,12 @@ class _MyHomePageState extends State<MyHomePage> {
         editingIndex = -1;
         nameController.clear();
         creditController.clear();
-        selectedGrade = 'A'; // รีเซ็ตเกรดกลับไปที่ A
+        selectedGrade = 'A';
       });
     }
   }
 
+  // ฟังก์ชันเพิ่มรายวิชาในเทอม
   void addSubjectToTerm(int termIndex) {
     String name = nameController.text;
     int credit = int.tryParse(creditController.text) ?? 0;
@@ -250,11 +257,12 @@ class _MyHomePageState extends State<MyHomePage> {
         terms[termIndex].subjects.add(Subject(name, credit, selectedGrade));
         nameController.clear();
         creditController.clear();
-        selectedGrade = 'A'; // รีเซ็ตเกรดกลับไปที่ A
+        selectedGrade = 'A';
       });
     }
   }
 
+  // ฟังก์ชันคำนวณ GPA รวม
   void calculateOverallGPA() {
     double totalOverallGradePoints = 0.0;
     int totalOverallCredits = 0;
@@ -283,6 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // ฟังก์ชันเพิ่มเทอม
   void addTerm() {
     setState(() {
       terms.add(Term());
@@ -290,6 +299,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // ฟังก์ชันคำนวณ GPA เทอม
   void calculateTermGPA(int termIndex) {
     Term term = terms[termIndex];
     double totalGradePoints = 0.0;
