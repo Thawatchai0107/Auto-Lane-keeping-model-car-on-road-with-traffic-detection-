@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Container(
-       decoration: BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
             image: NetworkImage(
                 'https://raw.githubusercontent.com/Thawatchai0107/Thawatchai-Resume/main/BG3.png'),
@@ -104,7 +104,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                 updateSubject(editingIndex);
                               }
                             },
-                            child: Text(editingIndex == -1 ? 'เพิ่มวิชา' : 'แก้ไขวิชา'),
+                            child: Text(
+                                editingIndex == -1 ? 'เพิ่มวิชา' : 'แก้ไขวิชา'),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 15), // ปรับขนาดและระยะห่างของปุ่ม
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    8.0), // เปลี่ยนรูปร่างของปุ่ม
+                              ),
+                            ),
                           ),
                           SizedBox(width: 30),
                           ElevatedButton(
@@ -112,6 +122,14 @@ class _MyHomePageState extends State<MyHomePage> {
                               addTerm();
                             },
                             child: Text('เพิ่มเทอม'),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 15), // ปรับขนาดและระยะห่างของปุ่ม
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -189,6 +207,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       calculateOverallGPA();
                     },
                     child: Text('คำนวณ GPA รวม'),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 15), // ปรับขนาดและระยะห่างของปุ่ม
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(8.0), // เปลี่ยนรูปร่างของปุ่ม
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -209,7 +236,9 @@ class _MyHomePageState extends State<MyHomePage> {
         if (terms.isEmpty) {
           terms.add(Term());
         }
-        terms[currentTermIndex].subjects.add(Subject(name, credit, selectedGrade));
+        terms[currentTermIndex]
+            .subjects
+            .add(Subject(name, credit, selectedGrade));
         nameController.clear();
         creditController.clear();
         selectedGrade = 'A';
@@ -235,7 +264,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (name.isNotEmpty && credit > 0) {
       setState(() {
-        terms[termIndex].subjects[editingIndex] = Subject(name, credit, selectedGrade);
+        terms[termIndex].subjects[editingIndex] =
+            Subject(name, credit, selectedGrade);
         editingIndex = -1;
         nameController.clear();
         creditController.clear();
