@@ -465,7 +465,7 @@ class GradeDisplayPage extends StatelessWidget {
                         ),
                         SizedBox(height: 8.0),
                         Text(
-                          'เกรดรวมของเทอม: ${term.gpa.toStringAsFixed(2)}',
+                          'GPA : ${term.gpa.toStringAsFixed(2)}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Divider(),
@@ -479,7 +479,7 @@ class GradeDisplayPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'เกรดรวมทั้งหมด: ${calculateOverallGPA().toStringAsFixed(2)}',
+              'GPA รวมทั้งหมด: ${calculateOverallGPA().toStringAsFixed(2)}',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
