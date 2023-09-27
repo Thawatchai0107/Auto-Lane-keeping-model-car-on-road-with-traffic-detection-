@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'คำนวณเกรดเฉลี่ย'),
       theme: ThemeData(
-         primarySwatch: Colors.red,
+        primarySwatch: Colors.red,
       ),
     );
   }
@@ -223,6 +223,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GradeDisplayPage(terms),
+            ),
+          );
+        },
+        child: Icon(Icons.arrow_forward),
+      ),
     );
   }
 
@@ -371,6 +382,119 @@ class Subject {
       return 2.0;
     } else if (grade == 'D') {
       return 1.0;
+    } else {
+      return 0.0;
+    }
+  }
+}
+
+class GradeDisplayPage extends StatelessWidget {
+  final List<Term> terms;
+
+  GradeDisplayPage(this.terms);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('แสดงเกรด'),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'รายชื่อวิชาและเกรด',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: terms.length,
+              itemBuilder: (context, termIndex) {
+                Term term = terms[termIndex];
+                return Card(
+                  elevation: 4.0,
+                  margin: EdgeInsets.all(16.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'เทอม ${termIndex + 1}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'รายชื่อวิชาและเกรด:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8.0),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: term.subjects.length,
+                          itemBuilder: (context, subjectIndex) {
+                            Subject subject = term.subjects[subjectIndex];
+                            return Text(
+                              '${subject.name}: ${subject.grade}',
+                              style: TextStyle(fontSize: 16),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'เกรดรวมของเทอม: ${term.gpa.toStringAsFixed(2)}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Divider(),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'เกรดรวมทั้งหมด: ${calculateOverallGPA().toStringAsFixed(2)}',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  double calculateOverallGPA() {
+    double totalOverallGradePoints = 0.0;
+    int totalOverallCredits = 0;
+
+    for (Term term in terms) {
+      double totalGradePoints = 0.0;
+      int totalCredits = 0;
+
+      for (Subject subject in term.subjects) {
+        totalGradePoints += (subject.gradePoints * subject.credit);
+        totalCredits += subject.credit;
+      }
+
+      if (totalCredits > 0) {
+        totalOverallGradePoints += totalGradePoints;
+        totalOverallCredits += totalCredits;
+      }
+    }
+
+    if (totalOverallCredits > 0) {
+      return totalOverallGradePoints / totalOverallCredits;
     } else {
       return 0.0;
     }
