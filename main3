@@ -195,11 +195,22 @@ class _MyHomePageState extends State<MyHomePage> {
                               title: Text('ชื่อวิชา: ${subject.name}'),
                               subtitle: Text(
                                   'หน่วยกิจ: ${subject.credit}  เกรด: ${subject.grade}'),
-                              trailing: IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {
-                                  editSubject(termIndex, subjectIndex);
-                                },
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () {
+                                      editSubject(termIndex, subjectIndex);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete), // เพิ่มไอคอนถังขยะ
+                                    onPressed: () {
+                                      deleteSubject(termIndex, subjectIndex); // เรียกใช้ฟังก์ชันลบวิชา
+                                    },
+                                  ),
+                                ],
                               ),
                             );
                           },
@@ -253,7 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
+  
   // ฟังก์ชันเพิ่มรายวิชา
   void addSubject() {
     String name = nameController.text;
@@ -272,6 +283,13 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedGrade = 'A';
       });
     }
+  }
+  
+    // ฟังก์ชันลบรายวิชา
+  void deleteSubject(int termIndex, int subjectIndex) {
+    setState(() {
+      terms[termIndex].subjects.removeAt(subjectIndex);
+    });
   }
 
   // ฟังก์ชันแก้ไขรายวิชา
@@ -301,6 +319,8 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
+  
+  
 
   // ฟังก์ชันเพิ่มรายวิชาในเทอม
   void addSubjectToTerm(int termIndex) {
@@ -517,3 +537,4 @@ class GradeDisplayPage extends StatelessWidget {
     }
   }
 }
+
