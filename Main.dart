@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+void main() => runApp(MyApp());
+
 MaterialColor customRed = MaterialColor(
   0xFFB71C1C,
   <int, Color>{
@@ -17,8 +19,6 @@ MaterialColor customRed = MaterialColor(
     900: Color(0xFFB71C1C),
   },
 );
-
-void main() => runApp(MyApp());
 
 class DatabaseHelper {
   static Database? _database;
@@ -40,9 +40,49 @@ class DatabaseHelper {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $termTable(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, gpa REAL)');
+        'CREATE TABLE $termTable(id INTEGER PRIMARY KEY AUTOINCREMENT, gpa REAL)');
     await db.execute(
         'CREATE TABLE $subjectTable(id INTEGER PRIMARY KEY AUTOINCREMENT, termId INTEGER, name TEXT, credit INTEGER, grade TEXT)');
+  }
+
+  // เพิ่ม Term และ Subjects ลงในฐานข้อมูล
+  Future<void> addTermAndSubjects(Term term) async {
+    final db = await database;
+
+    await db.transaction((txn) async {
+      term.id = await txn.insert(termTable, term.toMap());
+      for (Subject subject in term.subjects) {
+        subject.termId = term.id!;
+        await txn.insert(subjectTable, subject.toMap());
+      }
+    });
+  }
+
+  // โหลด Term และ Subjects จากฐานข้อมูล
+  Future<List<Term>> getTerms() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> termMaps = await db.query(termTable);
+
+    final List<Term> terms = [];
+
+    for (Map<String, dynamic> termMap in termMaps) {
+      final List<Map<String, dynamic>> subjectMaps = await db.query(
+        subjectTable,
+        where: 'termId = ?',
+        whereArgs: [termMap['id']],
+      );
+
+      final List<Subject> subjects = subjectMaps.map((s) {
+        return Subject.fromMap(s);
+      }).toList();
+
+      final Term term = Term.fromMap(termMap);
+      term.subjects = subjects;
+      terms.add(term);
+    }
+
+    return terms;
   }
 }
 
@@ -87,7 +127,25 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> gradeOptions = ['A', 'B', 'C', 'D', 'F'];
 
   @override
+  void initState() {
+    super.initState();
+    // โหลด Term และ Subjects จากฐานข้อมูลใน initState ทันทีเมื่อหน้าจอถูกสร้าง
+    _loadData();
+  }
+
+  void _loadData() async {
+    final terms = await _databaseHelper.getTerms();
+    if (terms.isNotEmpty) {
+      setState(() {
+        this.terms = terms;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // ระหว่างการสร้าง Widget ที่แสดง Term และ Subjects ในหน้าจอ
+    // คุณสามารถใช้ this.terms ได้เพื่อแสดงข้อมูลที่มีในฐานข้อมูล
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -296,7 +354,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (name.isNotEmpty && credit > 0) {
       setState(() {
         if (terms.isEmpty) {
-          terms.add(Term());
+          terms.add(Term(id: 0, gpa: 0.0));
         }
         terms[currentTermIndex]
             .subjects
@@ -347,7 +405,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (name.isNotEmpty && credit > 0) {
       setState(() {
         if (terms.length <= termIndex) {
-          terms.add(Term());
+          terms.add(Term(id: 0, gpa: 0.0));
         }
         terms[termIndex].subjects.add(Subject(name, credit, selectedGrade));
         nameController.clear();
@@ -387,7 +445,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void addTerm() {
     setState(() {
-      terms.add(Term());
+      terms.add(Term(id: 0, gpa: 0.0));
       currentTermIndex = terms.length - 1;
     });
   }
@@ -413,16 +471,60 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Term {
+  int? id;
   List<Subject> subjects = [];
   double gpa = 0.0;
+
+  Term({
+    required this.id, // ใส่ required เพื่อระบุว่าจำเป็นต้องรับค่า id
+    required this.gpa,
+  }); // คอนสตรักเตอร์เริ่มต้น (unnamed constructor) ที่ไม่รับพารามิเตอร์
+
+  // เพิ่มเมธอด toMap และ factory constructor เพื่อทำการแปลงข้อมูลเป็น Map และจาก Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'gpa': gpa,
+    };
+  }
+
+  factory Term.fromMap(Map<String, dynamic> map) {
+    return Term(
+      id: map['id'],
+      gpa: map['gpa'],
+    );
+  }
 }
 
 class Subject {
+  int? id;
+  int? termId;
   final String name;
   final int credit;
   final String grade;
 
   Subject(this.name, this.credit, this.grade);
+
+  // เพิ่มเมธอด toMap และ factory constructor เพื่อทำการแปลงข้อมูลเป็น Map และจาก Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'termId': termId,
+      'name': name,
+      'credit': credit,
+      'grade': grade,
+    };
+  }
+
+  factory Subject.fromMap(Map<String, dynamic> map) {
+    return Subject(
+      map['name'],
+      map['credit'],
+      map['grade'],
+    )
+      ..id = map['id']
+      ..termId = map['termId'];
+  }
 
   double get gradePoints {
     if (grade == 'A') {
