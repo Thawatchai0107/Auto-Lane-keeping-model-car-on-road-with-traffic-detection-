@@ -58,6 +58,26 @@ class DatabaseHelper {
     });
   }
 
+  Future<void> deleteTermAndSubjects(int termId) async {
+    final db = await database;
+
+    await db.transaction((txn) async {
+      await txn.delete(termTable, where: 'id = ?', whereArgs: [termId]);
+      await txn.delete(subjectTable, where: 'termId = ?', whereArgs: [termId]);
+    });
+  }
+
+  Future<void> updateSubject(Subject updatedSubject) async {
+    final db = await database;
+
+    await db.update(
+      subjectTable,
+      updatedSubject.toMap(),
+      where: 'id = ?',
+      whereArgs: [updatedSubject.id],
+    );
+  }
+
   // โหลด Term และ Subjects จากฐานข้อมูล
   Future<List<Term>> getTerms() async {
     final db = await database;
@@ -367,9 +387,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void deleteSubject(int termIndex, int subjectIndex) {
-    setState(() {
-      terms[termIndex].subjects.removeAt(subjectIndex);
-    });
+    int? termId = terms[termIndex].id;
+    int? subjectId = terms[termIndex].subjects[subjectIndex].id;
+
+    if (termId != null && subjectId != null) {
+      _databaseHelper.deleteTermAndSubjects(termId);
+
+      setState(() {
+        terms[termIndex].subjects.removeAt(subjectIndex);
+      });
+    }
   }
 
   void editSubject(int termIndex, int subjectIndex) {
@@ -383,18 +410,31 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void updateSubject(int termIndex, int subjectIndex) {
-    String name = nameController.text;
-    int credit = int.tryParse(creditController.text) ?? 0;
+    if (editingIndex == -1) {
+      addSubject();
+    } else {
+      String name = nameController.text;
+      int credit = int.tryParse(creditController.text) ?? 0;
 
-    if (name.isNotEmpty && credit > 0) {
-      setState(() {
-        terms[termIndex].subjects[subjectIndex] =
-            Subject(name, credit, selectedGrade);
-        editingIndex = -1;
-        nameController.clear();
-        creditController.clear();
-        selectedGrade = 'A';
-      });
+      if (name.isNotEmpty && credit > 0) {
+        final updatedSubject = Subject(
+          name,
+          credit,
+          selectedGrade,
+          id: terms[termIndex].subjects[subjectIndex].id,
+          termId: terms[termIndex].subjects[subjectIndex].termId,
+        );
+
+        _databaseHelper.updateSubject(updatedSubject);
+
+        setState(() {
+          terms[termIndex].subjects[subjectIndex] = updatedSubject;
+          editingIndex = -1;
+          nameController.clear();
+          creditController.clear();
+          selectedGrade = 'A';
+        });
+      }
     }
   }
 
@@ -503,7 +543,13 @@ class Subject {
   final int credit;
   final String grade;
 
-  Subject(this.name, this.credit, this.grade);
+  Subject(
+    this.name,
+    this.credit,
+    this.grade, {
+    this.id, // เพิ่ม parameter id
+    this.termId, // เพิ่ม parameter termId
+  });
 
   // เพิ่มเมธอด toMap และ factory constructor เพื่อทำการแปลงข้อมูลเป็น Map และจาก Map
   Map<String, dynamic> toMap() {
